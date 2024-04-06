@@ -39,19 +39,6 @@ This project aims to develop a simple AI-powered web application using Python, F
    - Push code to a GitHub repository.
    - Ensure the repository is public and contains all necessary files to run the application, excluding sensitive information like database credentials.
 
-## Submission:
-
-- Provide a link to the GitHub repository containing the project.
-- Ensure the repository includes a clear README with setup and run instructions.
-
-## Evaluation Criteria:
-
-- **Functionality:** The application works as expected without errors.
-- **Code Quality:** Code is well-organized, commented, and follows best practices.
-- **AI Integration:** Effective utilization of an AI model to enhance the application.
-- **User Interface:** The web interface is user-friendly and intuitive.
-- **Database Usage:** Efficient and correct use of the MySQL database to store and retrieve data.
-- **Documentation:** Clear and concise documentation, including in-code comments and a README.
 
 ## Usage:
 
