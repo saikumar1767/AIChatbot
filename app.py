@@ -30,7 +30,7 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS interactions (
 
 @app.route("/")
 def index():
-    cursor.execute("SELECT user_input, ai_response FROM interactions")
+    cursor.execute("SELECT user_input, ai_response FROM interactions  ORDER BY id DESC")
     chat_history = cursor.fetchall()
     return render_template('index.html', chat_history=chat_history)
 
