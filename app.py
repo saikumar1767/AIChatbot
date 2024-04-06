@@ -30,16 +30,24 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS interactions (
 
 @app.route("/")
 def index():
-    cursor.execute("SELECT user_input, ai_response FROM interactions  ORDER BY id DESC")
-    chat_history = cursor.fetchall()
+    try:
+        cursor.execute("SELECT user_input, ai_response FROM interactions  ORDER BY id DESC")
+        chat_history = cursor.fetchall()
+    except mysql.connector.Error as err:
+        error_msg = "An error occurred while retrieving chat history: {}".format(err)
+        return render_template('index.html', chat_history=[error_msg,])
+
     return render_template('index.html', chat_history=chat_history)
 
 
 @app.route("/get", methods=["POST"])
 def chat():
-    msg = request.form["msg"]
-    bot_response = get_chat_response(msg)
-    save_interaction(msg, bot_response)
+    try:
+        msg = request.form["msg"]
+        bot_response = get_chat_response(msg)
+        save_interaction(msg, bot_response)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
     return bot_response
 
 
@@ -58,8 +66,12 @@ def get_chat_response(text):
         return tokenizer.decode(chat_history_ids[:, bot_input_ids.shape[-1]:][0], skip_special_tokens=True)
 
 def save_interaction(user_input, ai_response):
-    cursor.execute("INSERT INTO interactions (user_input, ai_response) VALUES (%s, %s)", (user_input, ai_response))
-    db.commit()
+    try:
+        cursor.execute("INSERT INTO interactions (user_input, ai_response) VALUES (%s, %s)", (user_input, ai_response))
+        db.commit()
+    except mysql.connector.Error as err:
+        raise Exception("Error saving interaction: {}".format(err))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
