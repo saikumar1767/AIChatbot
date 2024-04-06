@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import mysql.connector
+from flask_bootstrap import Bootstrap4
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
@@ -7,7 +8,7 @@ tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
 model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
 
 app = Flask(__name__)
-
+bootstrap = Bootstrap4(app)
 
 # MySQL Configuration
 db = mysql.connector.connect(
@@ -29,7 +30,9 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS interactions (
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    cursor.execute("SELECT user_input, ai_response FROM interactions")
+    chat_history = cursor.fetchall()
+    return render_template('index.html', chat_history=chat_history)
 
 
 @app.route("/get", methods=["POST"])
